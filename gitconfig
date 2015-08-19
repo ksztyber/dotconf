@@ -1,0 +1,13 @@
+[core]
+	excludesfile = ~/.config/gitignore
+[color]
+	ui = true
+[user]
+[diff]
+	tool = vimdiff
+[alias]
+  co = checkout
+  st = status
+  br = branch
+  dt = difftool
+[http]
