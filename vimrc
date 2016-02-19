@@ -27,6 +27,16 @@ function! ToggleExtraWhitespaceH()
   endif
 endfunction
 
+function! CopySearchClipboard()
+  if ! has('clipboard')
+    return
+  endif
+  let val = getreg('/')
+  let val = substitute(val, '^\\<', '', 'g')
+  let val = substitute(val, '\\>$', '', 'g')
+  call system("xsel -ib", val)
+endfunction
+
 call TabSetup(2)
 set conceallevel=2
 set concealcursor=vin
@@ -36,6 +46,8 @@ set smartcase
 set autoindent
 " fixes ultra slow vimdiff scroll
 set lazyredraw
+" Copy yanks to X11's clipboard
+set clipboard=unnamedplus
 
 let g:clang_snippets=1
 let g:clang_conceal_snippets=1
@@ -43,6 +55,8 @@ let g:clang_conceal_snippets=1
 let g:clang_snippets_engine='clang_complete'
 " Make the CtrlP window scrollable
 let g:ctrlp_match_window = 'results:100'
+" Disable searching working dir
+let g:ctrlp_working_path_mode = 0
 " Powerline fancy symbols
 let g:Powerline_symbols = "fancy"
 " Change leader to space
@@ -53,6 +67,9 @@ highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :match ExtraWhitespace /\s\+$/
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=80
 autocmd FileType c,cpp,h :source $HOME/.vim/colors/ext-c.vim
+
+" Keep clipboard after vim is exited
+autocmd VimLeave * call system("xsel -ib", getreg('+'))
 
 " Complete options (disable preview scratch window, longest removed to aways
 " show menu)
@@ -77,13 +94,20 @@ nnoremap <C-d>      :tabp<CR><Esc>
 nnoremap <C-e>      :tabe 
 nnoremap <C-n>      :NERDTreeToggle<CR>
 nnoremap <C-p>      :CtrlP<CR>
-nnoremap <F2>       :set hlsearch!<CR><Esc>
+"nnoremap <F2>       :set hlsearch!<CR><Esc>
+nnoremap <silent> <F2> :let @/ = ""<CR><Esc>
 nnoremap <F3>       :call ToggleExtraWhitespaceH()<CR><Esc>
 nnoremap ?          :set relativenumber!<CR><Esc>
 nnoremap K          :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 nnoremap <leader>f  :NERDTreeFind<CR>
 nnoremap <leader>m  :tabn<CR><Esc>
 nnoremap <leader>n  :tabp<CR><Esc>
+
+if has('clipboard')
+" Keep clipboard when vim is suspended
+:nnoremap <silent> <C-z> :call system("xsel -ib", getreg('+'))<CR><C-z>
+:nnoremap <silent> * * :call CopySearchClipboard()<CR>
+endif
 
 " tmux/screen sisue
 "set t_ut=

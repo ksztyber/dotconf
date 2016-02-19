@@ -22,6 +22,10 @@ alias ls='ls --color=auto'
 alias l='ls'
 alias ll='ls -l'
 alias gitl='git log --pretty=oneline --abbrev-commit'
+alias sl='ls --color=auto'
+
+# Use vim with X support when available
+vimx --version &>/dev/null && alias vim='vimx'
 
 #alias gcc='gcc -fdiagnostics-color=auto'
 #alias g++='g++ -fdiagnostics-color=auto'
@@ -84,8 +88,8 @@ reset_prompt() {
     background_color='blue'
     PS1="[%n@%m %1~]%(#.#.$) "
 
-    [[ -n "$(ps $PPID | grep mc)"              ]] && background+=$'mc\n'
-    [[ -n "$(jobs | grep -E 'suspended *vim')" ]] && background+=$'vim\n'
+    [[ -n "$(ps $PPID | awk '{ print $5 }' | grep mc)" ]] && background+=$'mc\n'
+    [[ -n "$(jobs | grep -E 'suspended *vim')"         ]] && background+=$'vim\n'
 
     while read -r ent; do
         if [ -n "$ent" ]; then
