@@ -23,6 +23,9 @@ alias l='ls'
 alias ll='ls -l'
 alias gitl='git log --pretty=oneline --abbrev-commit'
 alias sl='ls --color=auto'
+alias ackcc='ack --cc'
+alias ackc='ack --cc'
+alias ackh='ack --hh'
 
 # Use vim with X support when available
 vimx --version &>/dev/null && alias vim='vimx'
@@ -33,7 +36,8 @@ vimx --version &>/dev/null && alias vim='vimx'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
-export PATH=$PATH:~/bin
+export PATH=~/bin:$PATH
+export PYTHONPATH=$PYTHONPATH:~/bin
 export EDITOR=vim
 export PYTHONSTARTUP=~/.config/python.startup
 # in case full paths are used for gcc/g++

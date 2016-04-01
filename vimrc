@@ -1,4 +1,18 @@
-call pathogen#infect()
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'https://github.com/VundleVim/Vundle.vim'
+Plugin 'https://github.com/Valloric/YouCompleteMe'
+Plugin 'https://github.com/rdnetto/YCM-Generator'
+Plugin 'https://github.com/scrooloose/nerdtree'
+Plugin 'https://github.com/mileszs/ack.vim'
+call vundle#end()
+
+let g:ycm_enable_diagnostic_signs = 0
+let g:ycm_enable_diagnostic_highlighting = 0
+
+"call pathogen#infect()
 filetype plugin on
 syntax on
 set number
@@ -27,17 +41,36 @@ function! ToggleExtraWhitespaceH()
   endif
 endfunction
 
-function! CopySearchClipboard()
+function! GetSearchReg()
+    let val = getreg('/')
+    let val = substitute(val, '^\\<', '', 'g')
+    let val = substitute(val, '\\>$', '', 'g')
+    return val
+endfunction
+
+function! CopySearchClipboard(search)
   if ! has('clipboard')
     return
   endif
-  let val = getreg('/')
-  let val = substitute(val, '^\\<', '', 'g')
-  let val = substitute(val, '\\>$', '', 'g')
-  call system("xsel -ib", val)
+"  if a:search
+    let val = getreg('/')
+    let val = substitute(val, '^\\<', '', 'g')
+    let val = substitute(val, '\\>$', '', 'g')
+"  else
+"    let val = getreg('/')
+"  endif
+  if !empty(val)
+    call system("xsel -ib", val)
+  endif
 endfunction
 
-call TabSetup(2)
+function! SearchAck(op)
+    :tabe<CR>
+    let val = GetSearchReg()
+    exec 'Ack ' . a:op . ' ' . val
+endfunction
+
+call TabSetup(4)
 set conceallevel=2
 set concealcursor=vin
 set runtimepath^=~/.vim/bundle/ctrlp.vim
@@ -49,10 +82,10 @@ set lazyredraw
 " Copy yanks to X11's clipboard
 set clipboard=unnamedplus
 
-let g:clang_snippets=1
-let g:clang_conceal_snippets=1
+"let g:clang_snippets=1
+"let g:clang_conceal_snippets=1
 " The single one that works with clang_complete
-let g:clang_snippets_engine='clang_complete'
+"let g:clang_snippets_engine='clang_complete'
 " Make the CtrlP window scrollable
 let g:ctrlp_match_window = 'results:100'
 " Disable searching working dir
@@ -63,13 +96,18 @@ let g:Powerline_symbols = "fancy"
 let mapleader=' '
 
 " Highlight trailing whitespaces
+
 highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :match ExtraWhitespace /\s\+$/
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=80
 autocmd FileType c,cpp,h :source $HOME/.vim/colors/ext-c.vim
+autocmd FileType c,cpp :let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " Keep clipboard after vim is exited
 autocmd VimLeave * call system("xsel -ib", getreg('+'))
+"autocmd VimEnter * call setreg('/', getreg('+'))
+autocmd FocusGained * echo 'Getting reg = ' getreg('+') 
+"call setreg('/', getreg('+'))
 
 " Complete options (disable preview scratch window, longest removed to aways
 " show menu)
@@ -89,24 +127,35 @@ set wildignore+=*.o,*.d,*oprofile_data*
 
 command! -nargs=1 Tab call TabSetup(<f-args>)
 
-nnoremap <C-f>      :tabn<CR><Esc>
-nnoremap <C-d>      :tabp<CR><Esc>
-nnoremap <C-e>      :tabe 
-nnoremap <C-n>      :NERDTreeToggle<CR>
-nnoremap <C-p>      :CtrlP<CR>
-"nnoremap <F2>       :set hlsearch!<CR><Esc>
+nnoremap <C-f>         :tabn<CR><Esc>
+nnoremap <C-d>         :tabp<CR><Esc>
+nnoremap <C-e>         :tabe 
+nnoremap <C-n>         :NERDTreeToggle<CR>
+nnoremap <C-p>         :CtrlP<CR>
 nnoremap <silent> <F2> :let @/ = ""<CR><Esc>
-nnoremap <F3>       :call ToggleExtraWhitespaceH()<CR><Esc>
-nnoremap ?          :set relativenumber!<CR><Esc>
-nnoremap K          :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-nnoremap <leader>f  :NERDTreeFind<CR>
-nnoremap <leader>m  :tabn<CR><Esc>
-nnoremap <leader>n  :tabp<CR><Esc>
+nnoremap <F3>          :call ToggleExtraWhitespaceH()<CR><Esc>
+nnoremap ?             :set relativenumber!<CR><Esc>
+nnoremap K             :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+nnoremap <leader>ff    :NERDTreeFind<CR>
+nnoremap <leader>m     :tabn<CR><Esc>
+nnoremap <leader>n     :tabp<CR><Esc>
+nnoremap <leader>df    *NN:YcmCompleter GoTo<CR><Esc>
+nnoremap <leader>fd    :e #<CR><Esc>
+nnoremap <leader>[     [{
+nnoremap <leader>]     ]}
+nnoremap <leader>kk    <C-w>k
+nnoremap <leader>jj    <C-w>j
+nnoremap <leader>gg    :call SearchAck('--cc')<CR><Esc>
+nnoremap <leader>gh    :call SearchAck("--hh")<CR><Esc>
+nnoremap <leader>qq    :q<CR><Esc>
+
 
 if has('clipboard')
-" Keep clipboard when vim is suspended
-:nnoremap <silent> <C-z> :call system("xsel -ib", getreg('+'))<CR><C-z>
-:nnoremap <silent> * * :call CopySearchClipboard()<CR>
+  " Keep clipboard when vim is suspended
+"  :nnoremap <silent> <C-z> :call system("xsel -ib", getreg('+'))<CR><C-z>
+"  :nnoremap <silent> <C-z> :call CopySearchClipboard(0)<CR><C-z>
+  "<CR><C-z>
+  :nnoremap <silent> * *N :call CopySearchClipboard(1)<CR><Esc>
 endif
 
 " tmux/screen sisue
