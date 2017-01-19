@@ -1,14 +1,13 @@
 #!/bin/bash
 
-set -x
-
 cp='cp -r --force'
 
 $cp vimrc       ~/.vimrc
 $cp zshrc       ~/.zshrc
-#$cp vim/*	      ~/.vim
+$cp vim         ~/.vim
 $cp gitconfig   ~/.gitconfig
 $cp gitignore   ~/.config
+$cp Xdefaults   ~/.Xdefaults
 
 if [ ! -e ~/.vim/bundle ]; then
   mkdir ~/.vim/bundle
