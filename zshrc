@@ -26,12 +26,15 @@ alias sl='ls --color=auto'
 alias ackcc='ack --cc'
 alias ackc='ack --cc'
 alias ackh='ack --hh'
+alias rmswp='find . -iname "*.sw[a-z]" -exec rm {} \;'
 
 # Use vim with X support when available
 vimx --version &>/dev/null && alias vim='vimx'
 
 #alias gcc='gcc -fdiagnostics-color=auto'
 #alias g++='g++ -fdiagnostics-color=auto'
+
+xset r rate 200 35
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -85,19 +88,27 @@ zle -N zle-line-init
 zle -N zle-line-finish
 fi
 
+# Unset bracketed paste
+unset zle_bracketed_paste
+
+_PS1="%F{green}[%f%n%F{green}@%f%m %1~%1 %F{green}]%f$ "
+PS1=$_PS1
+
 # prompt set up
 reset_prompt() {
     background=
     ps_jobs=
     background_color='blue'
-    PS1="[%n@%m %1~]%(#.#.$) "
+    #PS1="[%n@%m %1~]%(#.#.$) "
+    PS1=$_PS1
 
     [[ -n "$(ps $PPID | awk '{ print $5 }' | grep mc)" ]] && background+=$'mc\n'
     [[ -n "$(jobs | grep -E 'suspended *vim')"         ]] && background+=$'vim\n'
 
     while read -r ent; do
         if [ -n "$ent" ]; then
-            ps_jobs+="[%{$fg_bold[red]%}$ent%{$reset_color%}]"
+            #ps_jobs+="[%{$fg_bold[red]%}$ent%{$reset_color%}]"
+            ps_jobs+="%F{green}[%f$ent%F{green}]%f"
         fi
     done <<< $background
 
@@ -123,4 +134,6 @@ precmd() {
     reset_prompt
 }
 
-
+if [ -f ~/.config/zsh.conf ]; then
+    source ~/.config/zsh.conf
+fi

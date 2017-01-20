@@ -3,14 +3,15 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'https://github.com/VundleVim/Vundle.vim'
-Plugin 'https://github.com/Valloric/YouCompleteMe'
-Plugin 'https://github.com/rdnetto/YCM-Generator'
 Plugin 'https://github.com/scrooloose/nerdtree'
 Plugin 'https://github.com/mileszs/ack.vim'
+Plugin 'https://github.com/ctrlpvim/ctrlp.vim'
 call vundle#end()
 
-let g:ycm_enable_diagnostic_signs = 0
-let g:ycm_enable_diagnostic_highlighting = 0
+"Plugin 'https://github.com/Valloric/YouCompleteMe'
+"Plugin 'https://github.com/rdnetto/YCM-Generator'
+"let g:ycm_enable_diagnostic_signs = 0
+"let g:ycm_enable_diagnostic_highlighting = 0
 
 "call pathogen#infect()
 filetype plugin on
@@ -19,6 +20,9 @@ set number
 "let g:NERTTreeDirArrows=0
 set t_Co=256
 color mustang
+
+" Disable ESC timeout
+set timeoutlen=1000 ttimeoutlen=0
 
 let s:activedh = 1
 
@@ -43,8 +47,8 @@ endfunction
 
 function! GetSearchReg()
     let val = getreg('/')
-    let val = substitute(val, '^\\<', '', 'g')
-    let val = substitute(val, '\\>$', '', 'g')
+    let val = substitute(val, '^ *\\<', '', 'g')
+    let val = substitute(val, '\\> *$', '', 'g')
     return val
 endfunction
 
@@ -53,21 +57,15 @@ function! CopySearchClipboard(search)
     return
   endif
 "  if a:search
+    "echom 'Reg = ' getreg('/')
     let val = getreg('/')
-    let val = substitute(val, '^\\<', '', 'g')
-    let val = substitute(val, '\\>$', '', 'g')
+    let val = substitute(val, '^ *\\<', '', 'g')
+    let val = substitute(val, '\\> *$', '', 'g')
 "  else
 "    let val = getreg('/')
-"  endif
-  if !empty(val)
+"  endif if !empty(val)
     call system("xsel -ib", val)
-  endif
-endfunction
-
-function! SearchAck(op)
-    :tabe<CR>
-    let val = GetSearchReg()
-    exec 'Ack ' . a:op . ' ' . val
+  "endif
 endfunction
 
 call TabSetup(4)
@@ -81,6 +79,8 @@ set autoindent
 set lazyredraw
 " Copy yanks to X11's clipboard
 set clipboard=unnamedplus
+" Set format text to 120 columns
+set textwidth=120
 
 "let g:clang_snippets=1
 "let g:clang_conceal_snippets=1
@@ -99,14 +99,15 @@ let mapleader=' '
 
 highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :match ExtraWhitespace /\s\+$/
-autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=80
+"autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=80
+autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=120
 autocmd FileType c,cpp,h :source $HOME/.vim/colors/ext-c.vim
 autocmd FileType c,cpp :let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " Keep clipboard after vim is exited
 autocmd VimLeave * call system("xsel -ib", getreg('+'))
 "autocmd VimEnter * call setreg('/', getreg('+'))
-autocmd FocusGained * echo 'Getting reg = ' getreg('+') 
+"autocmd FocusGained * echo 'Getting reg = ' getreg('+') 
 "call setreg('/', getreg('+'))
 
 " Complete options (disable preview scratch window, longest removed to aways
@@ -121,11 +122,24 @@ autocmd FocusGained * echo 'Getting reg = ' getreg('+')
 
 " powerline
 set laststatus=2
-set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
+"set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
+python from powerline.vim import setup as powerline_setup
+python powerline_setup()
+python del powerline_setup
 
 set wildignore+=*.o,*.d,*oprofile_data*
 
 command! -nargs=1 Tab call TabSetup(<f-args>)
+
+function! VimGrep()
+    let filetypes = {}
+    let filetypes['c']      = '{c,cpp,h}'
+    let filetypes['cpp']    = '{c,cpp,h}'
+    let filetypes['python'] = '{py}'
+    let l:pattern = GetSearchReg()
+    execute "vimgrep! /" . l:pattern . "/g **/*." . get(filetypes, &filetype, expand('%:e'))
+    copen
+endfunction
 
 nnoremap <C-f>         :tabn<CR><Esc>
 nnoremap <C-d>         :tabp<CR><Esc>
@@ -145,9 +159,12 @@ nnoremap <leader>[     [{
 nnoremap <leader>]     ]}
 nnoremap <leader>kk    <C-w>k
 nnoremap <leader>jj    <C-w>j
-nnoremap <leader>gg    :call SearchAck('--cc')<CR><Esc>
-nnoremap <leader>gh    :call SearchAck("--hh")<CR><Esc>
 nnoremap <leader>qq    :q<CR><Esc>
+nnoremap <leader>v     :tabn<CR><Esc>
+nnoremap <leader>c     :tabp<CR><Esc>
+"nnoremap <leader>gg    :Ack! --cc 
+"nnoremap <leader>gh    :Ack! --hh 
+nnoremap <leader>gg    :call VimGrep()<CR><Esc>
 
 
 if has('clipboard')
@@ -155,6 +172,7 @@ if has('clipboard')
 "  :nnoremap <silent> <C-z> :call system("xsel -ib", getreg('+'))<CR><C-z>
 "  :nnoremap <silent> <C-z> :call CopySearchClipboard(0)<CR><C-z>
   "<CR><C-z>
+"  :nnoremap <silent> * *N :call CopySearchClipboard(1)<CR><Esc>
   :nnoremap <silent> * *N :call CopySearchClipboard(1)<CR><Esc>
 endif
 
