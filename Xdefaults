@@ -1,4 +1,5 @@
-URxvt.font: xft:Droid Sans Mono for Powerline:pixelsize=18:style=Regular
+#URxvt.font: xft:Droid Sans Mono for Powerline:pixelsize=16:style=Regular
+URxvt.font: xft:Droid Sans Mono Slashed for Powerline:pixelsize=16:style=Regular
 URxvt*background: #2d2d2d
 URxvt*foreground: #ffffff
  
@@ -22,3 +23,9 @@ URxvt*color15: #ffffff
 
 URxvt*scrollBar: false
 URxvt*scrollBar_right: false
+URxvt*iso14755: false
+URxvt.iso14755_52: false
+URxvt*keysym.C-C: eval:selection_to_clipboard
+URxvt*keysym.C-V: eval:paste_clipboard
+
+
