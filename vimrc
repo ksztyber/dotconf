@@ -68,6 +68,17 @@ function! CopySearchClipboard(search)
   "endif
 endfunction
 
+let s:mouse_en = 0
+function! ToggleMouse()
+    if s:mouse_en == 0
+        let s:mouse_en = 1
+        set mouse=a
+    else
+        let s:mouse_en = 0
+        set mouse=
+    endif
+endfunction
+
 call TabSetup(4)
 set conceallevel=2
 set concealcursor=vin
@@ -131,13 +142,18 @@ set wildignore+=*.o,*.d,*oprofile_data*
 
 command! -nargs=1 Tab call TabSetup(<f-args>)
 
-function! VimGrep()
+function! VimGrep(type)
     let filetypes = {}
-    let filetypes['c']      = '{c,cpp,h}'
-    let filetypes['cpp']    = '{c,cpp,h}'
+    let filetypes['c']      = '{c,cpp,h,hpp,hh}'
+    let filetypes['cpp']    = '{c,cpp,h,hpp,hh}'
     let filetypes['python'] = '{py}'
     let l:pattern = GetSearchReg()
-    execute "vimgrep! /" . l:pattern . "/g **/*." . get(filetypes, &filetype, expand('%:e'))
+    if a:type == ""
+        let l:ft = get(filetypes, &filetype, expand('%:e'))
+    else
+        let l:ft = a:type
+    endif
+    execute "vimgrep /" . l:pattern . "/j **/*." . l:ft
     copen
 endfunction
 
@@ -148,6 +164,7 @@ nnoremap <C-n>         :NERDTreeToggle<CR>
 nnoremap <C-p>         :CtrlP<CR>
 nnoremap <silent> <F2> :let @/ = ""<CR><Esc>
 nnoremap <F3>          :call ToggleExtraWhitespaceH()<CR><Esc>
+nnoremap <F4>          :call ToggleMouse()<CR><Esc>
 nnoremap ?             :set relativenumber!<CR><Esc>
 nnoremap K             :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 nnoremap <leader>ff    :NERDTreeFind<CR>
@@ -164,7 +181,9 @@ nnoremap <leader>v     :tabn<CR><Esc>
 nnoremap <leader>c     :tabp<CR><Esc>
 "nnoremap <leader>gg    :Ack! --cc 
 "nnoremap <leader>gh    :Ack! --hh 
-nnoremap <leader>gg    :call VimGrep()<CR><Esc>
+nnoremap <leader>gg    :call VimGrep('')<CR><Esc>
+nnoremap <leader>gh    :call VimGrep('{h,hh,hpp}')<CR><Esc>
+nnoremap <leader>gc    :call VimGrep('{c,cpp}')<CR><Esc>
 
 
 if has('clipboard')
@@ -187,4 +206,8 @@ highlight DiffText   cterm=bold ctermbg=88 gui=none guibg=Red
 
 " source ext c syntax
 :source ~/.vim/colors/ext-c.vim
+
+if filereadable($HOME . "/.vim/vimrc")
+    source ~/.vim/vimrc
+endif
 
