@@ -166,7 +166,8 @@ nnoremap <silent> <F2> :let @/ = ""<CR><Esc>
 nnoremap <F3>          :call ToggleExtraWhitespaceH()<CR><Esc>
 nnoremap <F4>          :call ToggleMouse()<CR><Esc>
 nnoremap ?             :set relativenumber!<CR><Esc>
-nnoremap K             :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+nnoremap J             <C-E>
+nnoremap K             <C-Y>
 nnoremap <leader>ff    :NERDTreeFind<CR>
 nnoremap <leader>m     :tabn<CR><Esc>
 nnoremap <leader>n     :tabp<CR><Esc>
