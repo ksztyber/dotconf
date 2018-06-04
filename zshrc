@@ -23,8 +23,8 @@ alias l='ls'
 alias ll='ls -l'
 alias gitl='git log --pretty=oneline --abbrev-commit'
 alias sl='ls --color=auto'
-alias ackcc='ack --cc'
-alias ackc='ack --cc'
+alias ackcc='ack --cc --hh --cpp'
+alias ackc='ack --cc --hh --cpp'
 alias ackh='ack --hh'
 alias rmswp='find . -iname "*.sw[a-z]" -exec rm {} \;'
 
@@ -84,6 +84,35 @@ if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
 function zle-line-finish () {
     printf '%s' "${terminfo[rmkx]}"
 }
+
+function vims() {
+	sessions=$HOME/.vim/sessions
+	if [[ "$1" = "-l" ]]; then
+		for s in $(ls $sessions); do
+			print $s;
+		done
+		return 0
+	fi
+
+	if [[ "$1" = "-r" ]]; then
+		if [[ ! -f $sessions/$2 ]]; then
+			echo "No session named '$2'"
+			return 1
+		fi
+
+		rm $sessions/$2
+		return
+	fi
+
+	if [[ ! -f $sessions/$1 ]];
+	then
+		echo "No session named '$1'"
+		return 1
+	fi
+
+	vim -S $sessions/$1
+}
+
 zle -N zle-line-init
 zle -N zle-line-finish
 fi
@@ -137,3 +166,5 @@ precmd() {
 if [ -f ~/.config/zsh.conf ]; then
     source ~/.config/zsh.conf
 fi
+
+[ "$TERM" != "screen-256color" ] && tmux && exit
