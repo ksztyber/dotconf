@@ -8,6 +8,7 @@ Plugin 'https://github.com/mileszs/ack.vim'
 Plugin 'https://github.com/ctrlpvim/ctrlp.vim'
 Plugin 'https://github.com/Valloric/YouCompleteMe'
 Plugin 'https://github.com/rdnetto/YCM-Generator'
+Plugin 'https://github.com/airblade/vim-gitgutter.git'
 call vundle#end()
 
 filetype plugin on
@@ -18,6 +19,8 @@ color mustang
 
 " Disable ESC timeout
 set timeoutlen=1000 ttimeoutlen=0
+" Disable immediate jump when searching
+set noincsearch
 
 let s:activedh = 1
 
@@ -143,15 +146,16 @@ let g:Powerline_symbols = "fancy"
 let mapleader=' '
 " Disable diagnostics
 let g:ycm_show_diagnostics_ui=0
-" Goto buffer
-let g:ycm_goto_buffer_command = 'new-or-existing-tab'
-let g:ycm_key_list_select_completion = [ '<Enter>', '<Down>' ]
-" Disable triggering the identifier completion
-let g:ycm_min_num_of_chars_for_completion = 99
-" Close the preview window after insertion
-let g:ycm_autoclose_preview_window_after_insertion = 1
-
-let g:ycm_collect_identifiers_from_tags_files=1
+let g:ycm_auto_trigger=0
+"" Goto buffer
+"let g:ycm_goto_buffer_command = 'new-or-existing-tab'
+"let g:ycm_key_list_select_completion = [ '<Enter>', '<Down>' ]
+"" Disable triggering the identifier completion
+"let g:ycm_min_num_of_chars_for_completion = 99
+"" Close the preview window after insertion
+"let g:ycm_autoclose_preview_window_after_insertion = 1
+"
+"let g:ycm_collect_identifiers_from_tags_files=1
 
 " Highlight trailing whitespaces
 highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
@@ -159,7 +163,10 @@ autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :match ExtraWhitespace /\s\+$
 "autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=80
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=100
 autocmd FileType c,cpp,h :source $HOME/.vim/colors/ext-c.vim
-autocmd FileType c,cpp :let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+"autocmd FileType c,cpp :let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+
+" Hide build / swap files in NERDTree
+let NERDTreeIgnore = ['\.[od]$', '\.gcda$', '\.gcno$', '\~$', '\.sw[a-z]$']
 
 " Keep clipboard after vim is exited
 " autocmd VimLeave * call system("xsel -ib", getreg('+'))
@@ -170,6 +177,9 @@ set laststatus=2
 python3 from powerline.vim import setup as powerline_setup
 python3 powerline_setup()
 python3 del powerline_setup
+
+" 100ms update time for gitgutter to show changes quickly
+set updatetime=100
 
 set wildignore+=*.o,*.d,*oprofile_data*,*.ko,*.mod.c,*/\.git/*
 
