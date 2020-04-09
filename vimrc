@@ -237,6 +237,10 @@ highlight DiffDelete cterm=bold ctermbg=17 gui=none guibg=Red
 highlight DiffChange cterm=bold ctermbg=17 gui=none guibg=Red
 highlight DiffText   cterm=bold ctermbg=88 gui=none guibg=Red
 
+highlight GitGutterAdd    ctermfg=2
+highlight GitGutterChange ctermfg=3
+highlight GitGutterDelete ctermfg=1
+
 " source ext c syntax
 :source ~/.vim/colors/ext-c.vim
 
