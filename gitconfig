@@ -7,7 +7,9 @@
 	tool = vimdiff
 [alias]
   co = checkout
+  ci = commit
   st = status
   br = branch
   dt = difftool
+  di = "!f() { git difftool -d ${1}~1..$1 ; }; f"
 [http]
