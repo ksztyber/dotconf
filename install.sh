@@ -28,4 +28,4 @@ if [ ! -e ~/.vim/bundle ]; then
   git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
 fi
 
-echo "Don't forget to run :PluginInstall from vim"
+vim +PluginInstall +qall
