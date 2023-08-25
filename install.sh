@@ -1,13 +1,27 @@
 #!/bin/bash
 
-cp='cp -r --force'
+set -e
 
-$cp vimrc       ~/.vimrc
-$cp zshrc       ~/.zshrc
-$cp vim         ~/.vim
-$cp gitconfig   ~/.gitconfig
-$cp gitignore   ~/.config
-$cp Xdefaults   ~/.Xdefaults
+rootdir=$(dirname $0)
+
+copy() { cp -r --force "$rootdir/$1" "$2"; }
+
+mkdir -p ~/.bashrc.d
+copy vimrc				~/.vimrc
+copy zshrc				~/.zshrc
+copy vim				~/.vim
+copy gitconfig				~/.gitconfig
+copy gitignore				~/.config
+copy Xdefaults				~/.Xdefaults
+copy bash-preexec/bash-preexec.sh	~/.bashrc.d/
+copy bashrc	 			~/.bashrc.d/
+
+[[ ! -e ~/.bashrc ]] && cat > ~/.bashrc <<- EOF
+	for _rc in ~/.bashrc.d/*; do
+		[[ -f "\$_rc" ]] && source "\$_rc"
+	done
+	unset _rc
+EOF
 
 if [ ! -e ~/.vim/bundle ]; then
   mkdir ~/.vim/bundle
