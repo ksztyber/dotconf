@@ -28,4 +28,8 @@ if [ ! -e ~/.vim/bundle ]; then
   git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
 fi
 
-vim +PluginInstall +qall
+plugvimdir=~/.vim/autoload/plug.vim
+plugvimsite=https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+[[ ! -e "$plugvimdir" ]] && curl -fLo --create-dirs "$plugvimdir" "$plugvimsite"
+
+vim +PluginInstall +PlugInstall +qall
