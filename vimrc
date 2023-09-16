@@ -150,6 +150,8 @@ autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :match ExtraWhitespace /\s\+$
 "autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=80
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=100
 autocmd FileType c,cpp,h :source $HOME/.vim/colors/ext-c.vim
+" Enable spellchecker in gitcommit
+autocmd FileType gitcommit :set spell
 
 " Hide build / swap files in NERDTree
 let NERDTreeIgnore = ['\.[od]$', '\.gcda$', '\.gcno$', '\~$', '\.sw[a-z]$']
