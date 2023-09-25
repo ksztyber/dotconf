@@ -1,7 +1,5 @@
 [core]
 	excludesfile = ~/.config/gitignore
-[color]
-	ui = true
 [user]
 	name = Konrad Sztyber
 	email = konrad.sztyber@gmail.com
@@ -14,4 +12,8 @@
 	br = branch
 	dt = difftool
 	di = "!f() { git difftool -d ${1}~1..$1 ; }; f"
-[http]
+[color]
+	ui = true
+[color "status"]
+	untracked = 160
+	changed = yellow
