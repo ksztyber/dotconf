@@ -10,9 +10,10 @@ on_ctrl_z() {
 	[[ -z $(jobs) ]] && return
 	fg
 }
-bind '"\C-z":"\C-uon_ctrl_z\n"'
+bind '"\C-z":"\C-u on_ctrl_z\n"'
 
 export EDITOR=vim
+export HISTCONTROL=ignorespace
 
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
