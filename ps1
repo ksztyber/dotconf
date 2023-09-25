@@ -4,7 +4,7 @@ update_ps1() {
 
 	ps1_template="${cgrn}[${cres}\u${cgrn}@${cres}\h \W${cgrn}]${cres}\\$ "
 	# The last job is stty, so truncate it
-	for appid in $(jobs -p | head -n-1); do
+	for appid in $(jobs -p | head -n-1 | tac); do
 		prefix+="${cgrn}[${cgrey}$(strings -n1 /proc/$appid/cmdline | head -n1)${cgrn}]${cres}"
 	done
 
