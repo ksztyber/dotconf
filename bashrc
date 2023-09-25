@@ -13,3 +13,7 @@ on_ctrl_z() {
 bind '"\C-z":"\C-uon_ctrl_z\n"'
 
 export EDITOR=vim
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias pacman='pacman --color=auto'
