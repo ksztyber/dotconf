@@ -18,6 +18,8 @@ bind '"\C-z":"\C-u on_ctrl_z\n"'
 
 export EDITOR=vim
 export HISTCONTROL=ignorespace
+export HISTSIZE=10000
+export HISTFILESIZE=10000
 
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
