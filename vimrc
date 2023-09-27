@@ -9,9 +9,12 @@ Plugin 'https://github.com/ctrlpvim/ctrlp.vim'
 Plugin 'https://github.com/airblade/vim-gitgutter.git'
 call vundle#end()
 
-call plug#begin('~/.vim/plugged')
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-call plug#end()
+" coc.nvim requires nodejs
+if has('node')
+	call plug#begin('~/.vim/plugged')
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	call plug#end()
+end
 
 filetype plugin on
 syntax on
@@ -180,30 +183,33 @@ command! -nargs=1 Tab 	call TabSetup(<f-args>)
 command! -nargs=1 Mks 	call MakeSession("<args>")
 command! RebuildTags 	!ctags -R .
 
-" Coc settings
-" This disables the transparent cursor, which makes the cursor disappear when C-c'ed when displaying
-" a list (e.g. from coc-references).
-let g:coc_disable_transparent_cursor = 1
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> gh <Plug>(coc-declaration)
-nmap <leader>gg :call CocAction('jumpDefinition')<CR><Esc>
-nmap <leader>gh :call CocAction('jumpDeclaration')<CR><Esc>
-nmap <leader>gr :call CocAction('jumpReferences')<CR><Esc>
+" coc.nvim requires nodejs
+if has('node')
+	" Coc settings
+	" This disables the transparent cursor, which makes the cursor disappear when C-c'ed when
+	" displaying a list (e.g. from coc-references).
+	let g:coc_disable_transparent_cursor = 1
+	nmap <silent> gd <Plug>(coc-definition)
+	nmap <silent> gi <Plug>(coc-implementation)
+	nmap <silent> gr <Plug>(coc-references)
+	nmap <silent> gh <Plug>(coc-declaration)
+	nmap <leader>gg :call CocAction('jumpDefinition')<CR><Esc>
+	nmap <leader>gh :call CocAction('jumpDeclaration')<CR><Esc>
+	nmap <leader>gr :call CocAction('jumpReferences')<CR><Esc>
 
-" Use <c-space> to trigger completion.
-if has('nvim')
-	inoremap <silent><expr> <c-space> coc#refresh()
-else
-	inoremap <silent><expr> <c-@> coc#refresh()
-endif
-" Use tab for trigger completion with characters ahead and navigate.
-inoremap <silent><expr> <TAB>
-	\ pumvisible() ? "\<C-n>" : "\<TAB>"
- inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+	" Use <c-space> to trigger completion.
+	if has('nvim')
+		inoremap <silent><expr> <c-space> coc#refresh()
+	else
+		inoremap <silent><expr> <c-@> coc#refresh()
+	endif
+	" Use tab for trigger completion with characters ahead and navigate.
+	inoremap <silent><expr> <TAB>
+		\ pumvisible() ? "\<C-n>" : "\<TAB>"
+	 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+	" Highlight the symbol and its references when holding the cursor.
+	autocmd CursorHold * silent call CocActionAsync('highlight')
+end
 
 nnoremap <C-f>         :tabn<CR><Esc>
 nnoremap <C-d>         :tabp<CR><Esc>
