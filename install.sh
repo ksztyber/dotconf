@@ -25,12 +25,12 @@ copy ps1				~/.bashrc.d/
 EOF
 
 if [ ! -e ~/.vim/bundle ]; then
-  mkdir ~/.vim/bundle
-  git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
+	mkdir ~/.vim/bundle
+	git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
 fi
 
 plugvimdir=~/.vim/autoload/plug.vim
 plugvimsite=https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-[[ ! -e "$plugvimdir" ]] && curl -fLo --create-dirs "$plugvimdir" "$plugvimsite"
+[[ ! -e "$plugvimdir" ]] && curl --create-dirs -fLo "$plugvimdir" "$plugvimsite"
 
 vim +PluginInstall +PlugInstall +qall
