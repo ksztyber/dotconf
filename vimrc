@@ -66,16 +66,10 @@ function! CopySearchClipboard(search)
   if ! has('clipboard')
     return
   endif
-"  if a:search
-    "echom 'Reg = ' getreg('/')
     let val = getreg('/')
     let val = substitute(val, '^ *\\<', '', 'g')
     let val = substitute(val, '\\> *$', '', 'g')
-"  else
-"    let val = getreg('/')
-"  endif if !empty(val)
     call system("xsel -ib", val)
-  "endif
 endfunction
 
 let s:mouse_en = 0
@@ -150,7 +144,6 @@ let mapleader=' '
 " Highlight trailing whitespaces
 highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :match ExtraWhitespace /\s\+$/
-"autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=80
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=100
 autocmd FileType c,cpp,h :source $HOME/.vim/colors/ext-c.vim
 " Enable spellchecker in gitcommit
@@ -158,9 +151,6 @@ autocmd FileType gitcommit :set spell
 
 " Hide build / swap files in NERDTree
 let NERDTreeIgnore = ['\.[od]$', '\.gcda$', '\.gcno$', '\~$', '\.sw[a-z]$']
-
-" Keep clipboard after vim is exited
-" autocmd VimLeave * call system("xsel -ib", getreg('+'))
 
 " powerline
 python3 import vim, importlib.util;
@@ -185,7 +175,7 @@ command! RebuildTags 	!ctags -R .
 
 " coc.nvim requires nodejs
 if has('node')
-	" Coc settings
+	" coc.nvim settings
 	" This disables the transparent cursor, which makes the cursor disappear when C-c'ed when
 	" displaying a list (e.g. from coc-references).
 	let g:coc_disable_transparent_cursor = 1
@@ -256,4 +246,3 @@ highlight GitGutterDelete ctermfg=1
 if filereadable($HOME . "/.vim/vimrc")
     source ~/.vim/vimrc
 endif
-
