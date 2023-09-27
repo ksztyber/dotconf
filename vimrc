@@ -160,11 +160,16 @@ let NERDTreeIgnore = ['\.[od]$', '\.gcda$', '\.gcno$', '\~$', '\.sw[a-z]$']
 " autocmd VimLeave * call system("xsel -ib", getreg('+'))
 
 " powerline
-set laststatus=2
-"set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
-python3 from powerline.vim import setup as powerline_setup
-python3 powerline_setup()
-python3 del powerline_setup
+python3 import vim, importlib.util;
+	\ vim.command('let has_powerline={}'.format(
+	\	int(importlib.util.find_spec("powerline") is not None)))
+
+if has_powerline
+	set laststatus=2
+	python3 from powerline.vim import setup as powerline_setup
+	python3 powerline_setup()
+	python3 del powerline_setup
+endif
 
 " 100ms update time for gitgutter to show changes quickly
 set updatetime=100
