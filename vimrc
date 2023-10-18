@@ -9,12 +9,13 @@ Plugin 'https://github.com/ctrlpvim/ctrlp.vim'
 Plugin 'https://github.com/airblade/vim-gitgutter.git'
 call vundle#end()
 
+call plug#begin('~/.vim/plugged')
+Plug 'MattesGroeger/vim-bookmarks'
 " coc.nvim requires nodejs
 if has('node')
-	call plug#begin('~/.vim/plugged')
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-	call plug#end()
 end
+call plug#end()
 
 filetype plugin on
 syntax on
@@ -200,6 +201,12 @@ if has('node')
 	" Highlight the symbol and its references when holding the cursor.
 	autocmd CursorHold * silent call CocActionAsync('highlight')
 end
+
+" vim-bookmark's settings
+highlight BookmarkSign ctermbg=NONE ctermfg=160
+highlight BookmarkLine ctermbg=2 ctermfg=NONE
+let g:bookmark_sign = '!!'
+let g:bookmark_highlight_lines = 1
 
 nnoremap <C-f>         :tabn<CR><Esc>
 nnoremap <C-d>         :tabp<CR><Esc>
