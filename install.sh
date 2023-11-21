@@ -16,6 +16,7 @@ copy Xdefaults				~/.Xdefaults
 copy bash-preexec/bash-preexec.sh	~/.bashrc.d/
 copy bashrc	 			~/.bashrc.d/
 copy ps1				~/.bashrc.d/
+copy tmux.conf				~/.tmux.conf
 
 [[ ! -e ~/.bashrc ]] && cat > ~/.bashrc <<- EOF
 	for _rc in ~/.bashrc.d/*; do
