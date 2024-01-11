@@ -11,7 +11,7 @@
 	st = status
 	br = branch
 	dt = difftool
-	di = "!f() { git difftool -d ${1}~1..$1 ; }; f"
+	di = "!f() { local rev=${1:-HEAD}; git difftool -d $rev~1..$rev ; }; f"
 [color]
 	ui = true
 [color "status"]
