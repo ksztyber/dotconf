@@ -145,7 +145,7 @@ let mapleader=' '
 " Highlight trailing whitespaces
 highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :match ExtraWhitespace /\s\+$/
-autocmd FileType c,cpp,cs,python,perl,sh,make,vim  :set colorcolumn=100
+autocmd FileType c,cpp,cs,python,perl,sh,make,vim,rust  :set colorcolumn=100
 autocmd FileType c,cpp,h :source $HOME/.vim/colors/ext-c.vim
 " Enable spellchecker in gitcommit
 autocmd FileType gitcommit :set spell
