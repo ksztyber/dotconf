@@ -7,6 +7,7 @@ rootdir=$(dirname $0)
 copy() { cp -r --force "$rootdir/$1" "$2"; }
 
 mkdir -p ~/.bashrc.d
+mkdir -p ~/.local/bin
 copy vimrc				~/.vimrc
 copy zshrc				~/.zshrc
 copy vim				~/.vim
@@ -16,7 +17,9 @@ copy Xdefaults				~/.Xdefaults
 copy bash-preexec/bash-preexec.sh	~/.bashrc.d/
 copy bashrc	 			~/.bashrc.d/
 copy ps1				~/.bashrc.d/
+copy alias				~/.bashrc.d/
 copy tmux.conf				~/.tmux.conf
+copy dnfproxy				~/.local/bin
 
 [[ ! -e ~/.bashrc ]] && cat > ~/.bashrc <<- EOF
 	for _rc in ~/.bashrc.d/*; do

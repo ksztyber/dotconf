@@ -1,0 +1,3 @@
+[[ $_DOTCONF_DNFPROXY -eq 1 ]] && alias "dnf=$HOME/.local/bin/dnfproxy"
+
+alias sudo='sudo '

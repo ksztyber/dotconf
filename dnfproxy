@@ -1,0 +1,23 @@
+#!/bin/bash
+
+get_proxy() {
+	local url
+
+	url=$(gsettings get org.gnome.system.proxy autoconfig-url) || return 1
+	wget -O /dev/null "$url" &>/dev/null
+}
+
+_dnf() {
+	local tmp rc=0
+
+	tmp=$(mktemp)
+	cat /etc/dnf/dnf.conf > "$tmp"
+	get_proxy || sed -i '/proxy=/d' "$tmp"
+
+	command dnf -c "$tmp" "$@" || rc=$?
+	rm -f "$tmp"
+
+	return $rc
+}
+
+_dnf "$@"
