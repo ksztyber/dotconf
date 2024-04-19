@@ -20,6 +20,7 @@ copy ps1				~/.bashrc.d/
 copy alias				~/.bashrc.d/
 copy tmux.conf				~/.tmux.conf
 copy bin/dnfproxy			~/.local/bin
+copy bin/git-colog			~/.local/bin
 
 [[ ! -e ~/.bashrc ]] && cat > ~/.bashrc <<- EOF
 	for _rc in ~/.bashrc.d/*; do

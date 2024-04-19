@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+
+usage() {
+	printf "Usage: %s [-n COUNT]\n" "$0"
+	printf "  -n COUNT max number of lines\n"
+}
+
+get-linecount() { hash tput 2>/dev/null && echo $(($(tput lines) - 2)); }
+
+parse-line() {
+	[[ "$1" =~ moving\ from\ .*\ to\ (.*) ]]
+	echo ${BASH_REMATCH[1]}
+}
+
+rev-present() {
+	local rev target="$1" revs=(${@:2})
+
+	for rev in "${revs[@]}"; do
+		[[ "$target" == "$rev" ]] && return 0
+	done
+	return 1
+}
+
+show-colog() {
+	local count="$1"
+
+	git reflog | grep -E "HEAD@{[0-9]*}: checkout:" | while read line; do
+		rev=$(parse-line "$line")
+		rev-present "$rev" "${revs[@]}" && continue
+		echo "$rev"
+
+		revs+=("$rev")
+		((${#revs[@]} < count)) || break
+	done
+}
+
+# Ensure we're in a git repo
+git status >/dev/null
+
+count=$(get-linecount || echo 50)
+while getopts 'hn:' opt; do
+	case "$opt" in
+		n) count="$OPTARG" ;;
+		h) usage; exit 0 ;;
+		*) usage; exit 1 ;;
+	esac
+done
+show-colog "$count"
