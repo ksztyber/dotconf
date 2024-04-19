@@ -20,6 +20,7 @@ export EDITOR=vim
 export HISTCONTROL=ignorespace
 export HISTSIZE=10000
 export HISTFILESIZE=10000
+export PATH="$HOME/.local/bin:$PATH"
 
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
