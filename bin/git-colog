@@ -3,8 +3,9 @@
 set -e
 
 usage() {
-	printf "Usage: %s [-n COUNT]\n" "$0"
-	printf "  -n COUNT max number of lines\n"
+	printf "Usage: %s [-a] [-n COUNT]\n" "$0"
+	printf "  -n COUNT    max number of lines\n"
+	printf "  -a          skip non-branch checkouts\n"
 }
 
 get-linecount() { hash tput 2>/dev/null && echo $(($(tput lines) - 2)); }
@@ -23,11 +24,14 @@ rev-present() {
 	return 1
 }
 
+is-branch() { git rev-parse --verify "refs/heads/$1" &> /dev/null; }
+
 show-colog() {
-	local count="$1"
+	local count="$1" showall="$2"
 
 	git reflog | grep -E "HEAD@{[0-9]*}: checkout:" | while read line; do
 		rev=$(parse-line "$line")
+		((showall == 1)) || is-branch "$rev" || continue
 		rev-present "$rev" "${revs[@]}" && continue
 		echo "$rev"
 
@@ -40,11 +44,13 @@ show-colog() {
 git status >/dev/null
 
 count=$(get-linecount || echo 50)
-while getopts 'hn:' opt; do
+showall=0
+while getopts 'ahn:' opt; do
 	case "$opt" in
 		n) count="$OPTARG" ;;
+		a) showall=1 ;;
 		h) usage; exit 0 ;;
 		*) usage; exit 1 ;;
 	esac
 done
-show-colog "$count"
+show-colog "$count" "$showall"
