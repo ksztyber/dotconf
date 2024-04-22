@@ -13,6 +13,7 @@
 	dt = difftool
 	di = "!f() { local rev=${1:-HEAD}; git difftool -d $rev~1..$rev ; }; f"
 	colog = git-colog
+	gerritlog = git-gerritlog
 [color]
 	ui = true
 [color "status"]

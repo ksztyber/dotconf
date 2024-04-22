@@ -8,6 +8,7 @@ copy() { cp -r --force "$rootdir/$1" "$2"; }
 
 mkdir -p ~/.bashrc.d
 mkdir -p ~/.local/bin
+mkdir -p $(python -m site --user-site)
 copy vimrc				~/.vimrc
 copy zshrc				~/.zshrc
 copy vim				~/.vim
@@ -21,6 +22,9 @@ copy alias				~/.bashrc.d/
 copy tmux.conf				~/.tmux.conf
 copy bin/dnfproxy			~/.local/bin
 copy bin/git-colog			~/.local/bin
+copy bin/git-gerritlog			~/.local/bin
+copy gerrit-helpers/gerritlog.py	~/.local/bin/gerritlog
+copy gerrit-helpers/gerrithelpers	$(python -m site --user-site)
 
 [[ ! -e ~/.bashrc ]] && cat > ~/.bashrc <<- EOF
 	for _rc in ~/.bashrc.d/*; do
