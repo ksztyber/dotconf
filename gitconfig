@@ -5,7 +5,12 @@
 	email = konrad.sztyber@gmail.com
 [diff]
 	tool = meld
+	algorithm = patience
+[mergetool "vimdiff"]
+	cmd = vimdiff \"$LOCAL\" \"$MERGED\" \"$REMOTE\"
 [alias]
+	grpe = grep
+	gerp = grep
 	co = checkout
 	ci = commit
 	st = status
