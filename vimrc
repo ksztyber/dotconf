@@ -21,7 +21,6 @@ filetype plugin on
 syntax on
 set number
 set t_Co=256
-set mouse=a
 set hlsearch
 color mustang
 
@@ -109,6 +108,14 @@ function! OpenSession(name)
     execute "source " . fname
 endfunction
 
+function! HasDisplay()
+	let _ = system('xsel')
+	return v:shell_error == 0
+endfunction
+
+if HasDisplay()
+	set mouse=a
+endif
 call TabSetup(8,0)
 set conceallevel=2
 set concealcursor=vin
