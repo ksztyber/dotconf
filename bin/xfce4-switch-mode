@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: BSD-3-Clause
+
+set -e
+
+get_xfconf_path() {
+	case "$1" in
+		xfwm4) echo "/general/theme" ;;
+		xsettings) echo "/Net/ThemeName" ;;
+		*) false ;;
+	esac
+}
+
+get_current_theme() {
+	xfconf-query -c "$1" -p "$(get_xfconf_path "$1")"
+}
+
+base_theme() {
+	local theme=$1
+
+	echo ${theme%%-dark}
+}
+
+theme_is_dark() {
+	[[ "$1" =~ -dark$ ]]
+}
+
+change_theme() {
+	local theme base
+
+	theme=$(get_current_theme "$1") base=$(base_theme "$theme")
+	case "$2" in
+		dark)
+			theme="${base}-dark" ;;
+		light) ;&
+		bright)
+			theme="$base" ;;
+		swap)
+			theme_is_dark "$theme" && theme="$base" || theme="${base}-dark" ;;
+		*) false ;;
+	esac
+	xfconf-query -c "$1" -p "$(get_xfconf_path "$1")" -s "$theme"
+}
+
+change_themes() {
+	change_theme xfwm4 "$1"
+	change_theme xsettings "$1"
+}
+
+usage() {
+	cat <<- EOF
+	usage: $(basename $0) ACTION
+
+	Change between a dark and light xfce4 themes.  This script assumes
+	that the dark theme has the same name as the light theme with a -dark
+	suffix (e.g. foo-theme-dark).
+
+	ACTION can be "dark", "light", or "swap".
+	EOF
+}
+
+while getopts 'h-:' optchar; do
+	case "$optchar" in
+		h) usage && exit 0 ;;
+		-)
+			case "$OPTARG" in
+				help) usage && exit 0 ;;
+			esac ;;
+	esac
+
+done
+change_themes "$1"

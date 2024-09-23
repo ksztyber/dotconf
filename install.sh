@@ -23,6 +23,7 @@ copy tmux.conf				~/.tmux.conf
 copy bin/dnfproxy			~/.local/bin
 copy bin/git-colog			~/.local/bin
 copy bin/git-gerritlog			~/.local/bin
+copy bin/xfce4-switch-mode		~/.local/bin
 copy gerrit-helpers/gerritlog.py	~/.local/bin/gerritlog
 copy gerrit-helpers/gerrithelpers	$(python -m site --user-site)
 
