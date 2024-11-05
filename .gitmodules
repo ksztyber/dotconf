@@ -3,4 +3,4 @@
 	url = https://github.com/rcaloras/bash-preexec.git
 [submodule "gerrit-helpers"]
 	path = gerrit-helpers
-	url = git@github.com:ksztyber/gerrit-helpers.git
+	url = https://github.com/ksztyber/gerrit-helpers.git
